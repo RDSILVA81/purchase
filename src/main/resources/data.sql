@@ -1,40 +1,7 @@
-DROP TABLE IF EXISTS purchase_order;
-DROP TABLE IF EXISTS order_product;
-DROP TABLE IF EXISTS product;
-DROP TABLE IF EXISTS customer;
+insert into customer(full_name,address,phone_number) values('Costumer 1','Av abc num:11','12334455');
+insert into customer(full_name,address,phone_number) values('Costumer 2','Av abc num:12','21212121');
+insert into customer(full_name,address,phone_number) values('Costumer 3','Av abc num:13','44444444');
+insert into customer(full_name,address,phone_number) values('Costumer 4','Av abc num:14','54545454');
+insert into customer(full_name,address,phone_number) values('Costumer 5','Av abc num:15','87565453');
 
-CREATE TABLE customer(
-    id INT AUTO_INCREMENT  PRIMARY KEY,
-    full_name VARCHAR(250) NOT NULL,
-    address VARCHAR(250) NOT NULL,
-    phone_number VARCHAR(250) NOT NULL,
-);
-
-CREATE TABLE product(
-    id INT AUTO_INCREMENT  PRIMARY KEY,
-    descritption VARCHAR(250) NOT NULL,
-    category VARCHAR(250) NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    weight DECIMAL(10, 2) NOT NULL,
-    creation_date TIMESTAMP NOT NULL
-);
-
-CREATE TABLE purchase_order(
-    id INT AUTO_INCREMENT  PRIMARY KEY,
-    id_customer INT,
-    id_product INT,
-    cost DECIMAL(10, 2) NOT NULL,
-    order_date TIMESTAMP NOT NULL
-    foreign key (id_product) references product(id),
-    foreign key (id_customer) references customer(id)
-);
-
-CREATE TABLE order_product(
-    order_id INT,
-    product_id INT,
-    quantity INT,
-    foreign key (order_id) references purchase_order(id),
-    foreign key (product_id) references product(id)
-);
-
-
+insert into product(descritption,category,price,weight,creation_date) values('product 1', '');
