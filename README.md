@@ -1,17 +1,17 @@
-Execute Spring boot it will be running in port 8080
-To see in-memory database H2 in the web browser
-http://localhost:8080/h2-console
-    user: rsilva
-    pwd:123456
+<p>Execute Spring boot it will be running in port 8080</p>
+<p>To see in-memory database H2 in the web browser</p>
+<p>http://localhost:8080/h2-console</p>
+    <p>user: rsilva</p>
+    <p>pwd:123456</p>
 
-Tables
-SELECT * FROM CUSTOMER;
-SELECT * FROM PURCHASE_ORDER;
-SELECT * FROM ORDER_PRODUCT;
-SELECT * FROM PRODUCT;
+<p>Tables</p>
+<p>SELECT * FROM CUSTOMER;</p>
+<p>SELECT * FROM PURCHASE_ORDER;</p>
+<p>SELECT * FROM ORDER_PRODUCT;</p>
+<p>SELECT * FROM PRODUCT;</p>
 
-To call all purchases by Customer
-http://localhost:8080/purchase/OrderByCustomerName?name=Customer 1
+<p>To call all purchases by Customer</p>
+<p>http://localhost:8080/purchase/OrderByCustomerName?name=Customer%201</p>
 
-To see all Customers
-http://localhost:8080/purchase/AllCustomer
+<p>To see all Customers</p>
+<p>http://localhost:8080/purchase/AllCustomer</p>
