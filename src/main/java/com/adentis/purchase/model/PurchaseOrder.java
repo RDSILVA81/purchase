@@ -12,8 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class PurchaseOrder {
-    private int id;
-    private int idCostumer;
+    private int id, idCostumer;
     private Double cost,shipping;
     private Date orderDate;
     private @Nullable  List<Product> items;

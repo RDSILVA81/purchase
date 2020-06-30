@@ -21,9 +21,12 @@ public class OrderRepository {
                     "   FROM PURCHASE_ORDER PO JOIN CUSTOMER C  ON PO.ID_CUSTOMER = C.ID\n" +
                     " WHERE C.ID = :id\n", new MapSqlParameterSource("id", customer.getId()),
                     (rs,row)-> new PurchaseOrder(
+                            rs.getInt("id"),
+                            rs.getInt("id_Costumer"),
                             rs.getDouble("cost"),
                             rs.getDouble("shipping"),
-                            rs.getDate("order_date")
+                            rs.getDate("order_date"),
+                            null
                     ))
         );
     }
