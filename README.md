@@ -10,8 +10,5 @@
 <p>SELECT * FROM ORDER_PRODUCT;</p>
 <p>SELECT * FROM PRODUCT;</p>
 
-<p>To call all purchases by Customer</p>
-<p>http://localhost:8080/purchase/OrderByCustomerName?name=Customer%201</p>
-
-<p>To see all Customers</p>
-<p>http://localhost:8080/purchase/AllCustomer</p>
+<p>To see and test all apis access the swagger documentation/p>
+<p>http://localhost:8080/swagger-ui.html</p>
