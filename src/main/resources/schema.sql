@@ -22,10 +22,9 @@ CREATE TABLE product(
 CREATE TABLE purchase_order(
     id INT AUTO_INCREMENT  PRIMARY KEY,
     id_customer INT,
-    id_product INT,
     cost DECIMAL(10, 2) NOT NULL,
+    shipping DECIMAL(10,2) NOT NULL,
     order_date TIMESTAMP NOT NULL,
-    foreign key (id_product) references product(id),
     foreign key (id_customer) references customer(id)
 );
 
