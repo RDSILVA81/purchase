@@ -1,4 +1,4 @@
-package com.adentis.purchase.controller;
+package com.adentis.purchase.util;
 
 import java.time.temporal.ValueRange;
 
@@ -8,7 +8,7 @@ public class ValidateRange {
     private static final ValueRange forToSix = ValueRange.of(4,6);
     private static final ValueRange sevenToTwelve = ValueRange.of(7,12);
 
-    public static String getRange(int value){
+    public static String getRange(long value){
         if(onetoTree.isValidValue(value)){
             return "1-3";
         } else if(forToSix.isValidValue(value)){

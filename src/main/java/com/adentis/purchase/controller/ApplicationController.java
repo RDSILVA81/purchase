@@ -6,6 +6,7 @@ import com.adentis.purchase.repository.CustomerRepository;
 import com.adentis.purchase.repository.OrderProductRepository;
 import com.adentis.purchase.repository.OrderRepository;
 import com.adentis.purchase.repository.PurchaseRepository;
+import com.adentis.purchase.util.ValidateRange;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -17,8 +18,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
-import java.time.temporal.ValueRange;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,18 +73,17 @@ public class ApplicationController {
     @PostMapping("/ProductsByRange")
     @ApiOperation(value="Returns the number of orders by range in months")
     public Map<String,Integer> getAllProductsByRange(
-            @ApiParam(value = "List of ranges {“1-3”, “4-6”, “7-12”, “>12”}", required = true)
-            @RequestBody List<String> body){
-        System.out.println(body);
-        return null;
+            @ApiParam(value = "List of ranges {\"range1\": \"1-3\", \"range2\": \"4-6\",\"range3\": \"7-12\" ,\"range4\": \">12\"}", required = true)
+            @RequestBody Map<String,String> body){
+        return getProductsByRange(body);
     }
 
-    private Map<String,Integer> getProductsByRange(List<String> range){
+    private Map<String,Integer> getProductsByRange(Map<String,String> body){
         Map<String,Integer> mapAll = getMap(getAllPurchases());
         Map<String,Integer> result = new HashMap<>();
-        range.forEach(r -> {
-            if(mapAll.containsKey(r)){
-                result.put(r,mapAll.get(r));
+        body.forEach((k,v) -> {
+            if(mapAll.containsKey(v)){
+                result.put(v,mapAll.get(v));
             }
         });
         return result;
@@ -100,8 +98,10 @@ public class ApplicationController {
         orders.forEach(
                 p -> {
                     p.getItems().forEach(item -> {
-                                result.compute(ValidateRange.getRange(
-                                        Period.between(item.getCreationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now()).getMonths()),
+                                result.compute(
+                                        ValidateRange.getRange(
+                                            Period.between(item.getCreationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                                                           LocalDate.now()).toTotalMonths()),
                                         (k, v) -> v + 1);
                             }
                     );
@@ -123,7 +123,6 @@ public class ApplicationController {
             orders = purchaseRepository.getListOrdersByPeriod(formatter.parse(start),formatter.parse(end));
             orderProductRepository.getProductByListorders(orders);
         } catch (ParseException e) {
-            //Todo add log4j
             e.printStackTrace();
         }
         return orders;
