@@ -17,25 +17,21 @@ public class OrderProductRepository {
     private NamedParameterJdbcTemplate jdbc;
 
     public void getProductByListorders(List<PurchaseOrder> orders){
-
         orders.forEach(order ->
-                {
-                    order.setItems(
-                            jdbc.query("SELECT P.* FROM PRODUCT P JOIN ORDER_PRODUCT OP ON P.ID = OP.PRODUCT_ID WHERE OP.ORDER_ID = :orderId ",
-                                    new MapSqlParameterSource("orderId", order.getId()),
-                                    (rs,row) ->
-                                            new Product(
-                                                    rs.getString("descritption"),
-                                                    rs.getString("category"),
-                                                    rs.getDouble("price"),
-                                                    rs.getDouble("weight"),
-                                                    new Date(rs.getDate("creation_date").getTime())
-                                            )
-                                    )
-                    );
-                }
+                        order.setItems(
+                                jdbc.query("SELECT P.* FROM PRODUCT P JOIN ORDER_PRODUCT OP ON P.ID = OP.PRODUCT_ID WHERE OP.ORDER_ID = :orderId ",
+                                        new MapSqlParameterSource("orderId", order.getId()),
+                                        (rs,row) ->
+                                                new Product(
+                                                        rs.getString("descritption"),
+                                                        rs.getString("category"),
+                                                        rs.getDouble("price"),
+                                                        rs.getDouble("weight"),
+                                                        new Date(rs.getDate("creation_date").getTime())
+                                                )
+                                        )
+                        )
                 );
 
     }
-
 }

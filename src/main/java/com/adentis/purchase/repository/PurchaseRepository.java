@@ -36,4 +36,17 @@ public class PurchaseRepository {
                 )
         );
     }
+
+    public List<PurchaseOrder> getAllListOrders(){
+        return jdbc.query("SELECT * FROM PURCHASE_ORDER PO ",
+                (rs,row) -> new PurchaseOrder(
+                        rs.getInt("id"),
+                        rs.getInt("id_customer"),
+                        rs.getDouble("cost"),
+                        rs.getDouble("shipping"),
+                        rs.getDate("order_date"),
+                        null
+                )
+        );
+    }
 }
