@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -21,10 +22,12 @@ import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/purchase")
-@Api(value="All apis about purchases and customers")
+@Api( value="All apis about purchases and customers")
 public class ApplicationController {
 
     @Autowired
@@ -110,9 +113,46 @@ public class ApplicationController {
         return result;
     }
 
+    @PostMapping("/AllProductsByRangeFuture")
+    @ApiOperation(value="Returns the number of orders by range in months")
+    public Stream<Map<String,Integer>>  getAllProductsByRangeFuture(
+            @ApiParam(value = "List of ranges {\"range1\": \"1-3\", \"range2\": \"4-6\",\"range3\": \"7-12\" ,\"range4\": \">12\"}", required = true)
+            @RequestBody Map<String,String> body){
+        CompletableFuture<Map<String,Integer>> [] listFuture = new CompletableFuture[body.size()];
+        int count = 0;
+        for (Map.Entry<String, String> range : body.entrySet()) {
+            listFuture[count++] = CompletableFuture.supplyAsync(()->getProductsRange(range.getValue()));
+        }
+        return Stream.of(listFuture).map(CompletableFuture::join);
+    }
+
+    @Async
+    private Map<String,Integer> getProductsRange(String range){
+        return getMapFuture(getAllPurchases(),range);
+    }
+
+
+    private Map<String,Integer> getMapFuture(List<PurchaseOrder> orders, String range){
+        Map<String,Integer> mapRange = new HashMap<String,Integer>();
+        mapRange.put(range,0);
+        orders.forEach(
+                p -> {
+                    p.getItems().forEach(item -> {
+                                if (range.equals(ValidateRange.getRange(
+                                        Period.between(item.getCreationDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                                                LocalDate.now()).toTotalMonths()))) {
+                                    mapRange.compute(range,(k, v) -> v + 1 );
+                                }
+                            }
+                    );
+                }
+        );
+        return mapRange;
+    }
+
     private List<PurchaseOrder> getAllPurchases(){
         List<PurchaseOrder> orders =  purchaseRepository.getAllListOrders();
-        orderProductRepository.getProductByListorders(orders);
+        orderProductRepository.getProductByListOrders(orders);
         return orders;
     }
 
@@ -121,7 +161,7 @@ public class ApplicationController {
         List<PurchaseOrder> orders = null;
         try {
             orders = purchaseRepository.getListOrdersByPeriod(formatter.parse(start),formatter.parse(end));
-            orderProductRepository.getProductByListorders(orders);
+            orderProductRepository.getProductByListOrders(orders);
         } catch (ParseException e) {
             e.printStackTrace();
         }

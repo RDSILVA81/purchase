@@ -16,7 +16,7 @@ public class OrderProductRepository {
     @Autowired
     private NamedParameterJdbcTemplate jdbc;
 
-    public void getProductByListorders(List<PurchaseOrder> orders){
+    public void getProductByListOrders(List<PurchaseOrder> orders){
         orders.forEach(order ->
                         order.setItems(
                                 jdbc.query("SELECT P.* FROM PRODUCT P JOIN ORDER_PRODUCT OP ON P.ID = OP.PRODUCT_ID WHERE OP.ORDER_ID = :orderId ",
